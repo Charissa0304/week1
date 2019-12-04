@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bw.week1.dao.GoodsMapper">
+   <select id="getGoodsList" resultType="map">
+   select a.gid,a.gname,a.datea,a.price,GROUP_CONCAT(b.bname) bnames,GROUP_CONCAT(c.tname) tnames from t_goods a left join t_brand b on a.bid=b.bid
+left join t_type c on a.tid=c.tid
+     <where>
+        <if test="null!=gname and gname!=''">gname like '%${gname}%'</if>
+     </where>
+GROUP BY a.gid
+   </select>
+   
+   <select id="getTypeList" resultType="Type">
+      select * from t_type
+   </select>
+   
+   <select id="getBrandList" resultType="Brand">
+      select * from t_brand
+   </select>
+   
+   <insert id="add">
+      insert into t_goods set gname=#{gname},datea=#{datea},bid=#{bid},tid=#{tid},price=#{price}
+   </insert>
+   
+   <select id="getGoodsByGid" resultType="Goods">
+      select * from t_goods where gid=#{gid}
+   </select>
+   
+   <update id="update">
+      update t_goods set gname=#{gname},datea=#{datea},bid=#{bid},tid=#{tid},price=#{price} where gid=#{gid}
+   </update>
+   
+   <delete id="delAll">
+      delete from t_goods where gid in (${gid})
+   </delete>
+</mapper>
